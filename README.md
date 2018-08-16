@@ -1,2 +1,2 @@
 # SemSim-Java-API
-Programmatic interface for working with SemSim models and composite annotations
+Programmatic interface for working with semantic annotations on biosimulation models
