@@ -26,6 +26,7 @@ import semsim.model.physical.object.CompositePhysicalEntity;
 import semsim.reading.CellMLreader;
 import semsim.reading.ModelClassifier.ModelType;
 import semsim.reading.OMEXmanifestReader;
+import semsim.reading.SBMLreader;
 import semsim.reading.SemSimOWLreader;
 
 
@@ -44,7 +45,7 @@ public class SemSimAPIexamples {
 		// Read in an SBML model
 		File modelfile = new File("./test/BIOMD0000000355.xml");
 		ModelAccessor ma = FileAccessorFactory.getModelAccessor(modelfile);
-		SemSimModel semsimmodel = new SemSimOWLreader(ma).read();
+		SemSimModel semsimmodel = new SBMLreader(ma).read();
 		System.out.println("Loaded " + semsimmodel.getName());
 		
 		
