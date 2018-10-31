@@ -14,6 +14,7 @@ import semsim.SemSimLibrary;
 import semsim.annotation.ReferenceOntologyAnnotation;
 import semsim.annotation.ReferenceTerm;
 import semsim.definitions.SemSimRelations.SemSimRelation;
+import semsim.definitions.SemSimRelations.StructuralRelation;
 import semsim.definitions.SemSimTypes;
 import semsim.fileaccessors.FileAccessorFactory;
 import semsim.fileaccessors.ModelAccessor;
@@ -23,6 +24,8 @@ import semsim.model.physical.PhysicalEntity;
 import semsim.model.physical.PhysicalModelComponent;
 import semsim.model.physical.PhysicalProcess;
 import semsim.model.physical.object.CompositePhysicalEntity;
+import semsim.model.physical.object.PhysicalPropertyInComposite;
+import semsim.model.physical.object.ReferencePhysicalEntity;
 import semsim.reading.CellMLreader;
 import semsim.reading.ModelClassifier.ModelType;
 import semsim.reading.OMEXmanifestReader;
@@ -88,11 +91,12 @@ public class SemSimAPIexamples {
 			return;
 		}
 
-		
+		System.out.println("\n\nLoaded " + semsimmodel.getName());
+
 		// Write out descriptions on all the data structures in the model.
 		// For data structures with composite annotations that use a physical property 
 		// and a composite physical entity, write out URIs of the components in the annotation.
-		System.out.println("\n\nAn example of a composite annotation:\n");
+		System.out.println("\n\nAn example of a composite annotation:");
 		for(DataStructure ds : semsimmodel.getAssociatedDataStructures()){
 						
 			// If the data structure doesn't have an associated physical property
@@ -128,26 +132,58 @@ public class SemSimAPIexamples {
 			}
 		}
 		
+			
 		// Add a singular (non-composite) annotation to a data structure that provides its complete physical definition
-		System.out.println("\n\nAn example of a singular annotation:");
 		DataStructure ds = semsimmodel.getAssociatedDataStructure("environment.time");
 		URI uri = URI.create("http://identifiers.org/opb/OPB_01023");
 		ds.addReferenceOntologyAnnotation(SemSimRelation.BQB_IS, uri, "Time", sslib);
 		
 		// Iterate through all reference ontology annotations on the data structure and output them to console.
 		for(ReferenceOntologyAnnotation roa : ds.getAllReferenceOntologyAnnotations())
-			System.out.println("\n" + ds.getName() + " <" + roa.getRelation().getURI() + "> " + roa.getReferenceURI());
+			System.out.println("\n\nSingular annotation on " + ds.getName() + ": <" + roa.getRelation().getURI() + "> " + roa.getReferenceURI());
+				
+				
+		// Create a composite annotation for a model codeword (Right ventricular blood volume)
+		DataStructure dscomp = semsimmodel.getAssociatedDataStructure("right_ventricle.V_rv");
+		PhysicalPropertyInComposite ppic = new PhysicalPropertyInComposite("Fluid volume", URI.create("http://identifiers.org/opb/OPB_00154"));
+		
+		// Set the associated physical property
+		dscomp.setAssociatedPhysicalProperty(ppic);
+		
+		// Set an associated composite physical entity (this is the physical component that bears the codeword's associated physical property)
+		ArrayList<PhysicalEntity> entlist = new ArrayList<PhysicalEntity>();
+		ArrayList<StructuralRelation> rellist = new ArrayList<StructuralRelation>();
 
+		// Add physical entities in series
+		entlist.add(new ReferencePhysicalEntity(URI.create("http://identifiers.org/fma/FMA:9670"), "Portion of blood"));
+		entlist.add(new ReferencePhysicalEntity(URI.create("http://identifiers.org/fma/FMA:9291"), "Cavity of right ventricle"));
+
+		// Add <bqbiol:isPartOf> relation
+		rellist.add(StructuralRelation.BQB_IS_PART_OF);
+		
+		// Instantiate new composite physical entity using the entity and relation lists
+		CompositePhysicalEntity cpe = new CompositePhysicalEntity(entlist, rellist);
+		
+		// Set the physical component that bears the property
+		dscomp.setAssociatedPhysicalModelComponent(cpe);
+		System.out.println("\n\nAn example of a composite annotation as a string:");
+		System.out.println("  " + dscomp.getCompositeAnnotationAsString(true)); // Boolean argument indicates whether to append the codeword name in parentheses to the string
+		
 		
 		// Write out a model as a SemSim OWL file
-		File outfile = new File("./test/output/semsimowltest.owl");
-		ModelAccessor outacc = FileAccessorFactory.getModelAccessor(outfile, ModelType.SEMSIM_MODEL);
+		File modeloutfile = new File("./test/output/semsimowltest.owl");
+		ModelAccessor outacc = FileAccessorFactory.getModelAccessor(modeloutfile, ModelType.SEMSIM_MODEL);
 		outacc.writetoFile(semsimmodel);
 		
 		// Write out a model as a standalone CellML file
-		outfile = new File("./test/output/cellmltest.owl");
-		outacc = FileAccessorFactory.getModelAccessor(outfile, ModelType.CELLML_MODEL);
+		modeloutfile = new File("./test/output/cellmltest.owl");
+		outacc = FileAccessorFactory.getModelAccessor(modeloutfile, ModelType.CELLML_MODEL);
 		outacc.writetoFile(semsimmodel);
 		
+		// Write out model in a COMBINE archive
+		File omexoutfile = new File("./test/output/cellmltest.omex");
+		modeloutfile = new File("model/cellmltest.cellml"); // Use a path that is relative to the location of the OMEX file 
+		ModelAccessor omexoutma = FileAccessorFactory.getOMEXArchive(omexoutfile, modeloutfile, ModelType.CELLML_MODEL);
+		omexoutma.writetoFile(semsimmodel);
 	}
 }
