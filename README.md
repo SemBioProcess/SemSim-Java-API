@@ -5,4 +5,6 @@ Please see [SemSimAPIexamples.java](https://github.com/SemBioProcess/SemSim-Java
 
 [Click here for the latest development version of the SemSim API library.](https://github.com/SemBioProcess/SemSim-Java-API/blob/master/lib/SemSimAPI.jar)
 
-[Click here for its associated JavaDoc.](https://github.com/SemBioProcess/SemSim-Java-API/blob/master/doc/SemSimAPIjavaDoc.zip)
+[Click here for the JavaDoc webpages](http://sembioprocess.github.io/SemSim-Java-API)
+
+[Click here for the JavaDoc pages in a zip file](https://github.com/SemBioProcess/SemSim-Java-API/blob/master/doc/SemSimAPIjavaDoc.zip)
