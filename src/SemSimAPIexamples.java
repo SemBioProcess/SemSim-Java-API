@@ -135,7 +135,7 @@ public class SemSimAPIexamples {
 			
 		// Add a singular (non-composite) annotation to a data structure that provides its complete physical definition
 		DataStructure ds = semsimmodel.getAssociatedDataStructure("environment.time");
-		URI uri = URI.create("http://identifiers.org/opb/OPB_01023");
+		URI uri = URI.create("https://identifiers.org/opb/OPB_01023");
 		ds.addReferenceOntologyAnnotation(SemSimRelation.BQB_IS, uri, "Time", sslib);
 		
 		// Iterate through all reference ontology annotations on the data structure and output them to console.
@@ -145,7 +145,7 @@ public class SemSimAPIexamples {
 				
 		// Create a composite annotation for a model codeword (Right ventricular blood volume)
 		DataStructure dscomp = semsimmodel.getAssociatedDataStructure("right_ventricle.V_rv");
-		PhysicalPropertyInComposite ppic = new PhysicalPropertyInComposite("Fluid volume", URI.create("https://identifiers.org/OPB/OPB_00154"));
+		PhysicalPropertyInComposite ppic = new PhysicalPropertyInComposite("Fluid volume", URI.create("https://identifiers.org/opb/OPB_00154"));
 		
 		// Set the associated physical property
 		dscomp.setAssociatedPhysicalProperty(ppic);
