@@ -145,7 +145,7 @@ public class SemSimAPIexamples {
 				
 		// Create a composite annotation for a model codeword (Right ventricular blood volume)
 		DataStructure dscomp = semsimmodel.getAssociatedDataStructure("right_ventricle.V_rv");
-		PhysicalPropertyInComposite ppic = new PhysicalPropertyInComposite("Fluid volume", URI.create("http://identifiers.org/opb/OPB_00154"));
+		PhysicalPropertyInComposite ppic = new PhysicalPropertyInComposite("Fluid volume", URI.create("https://identifiers.org/OPB/OPB_00154"));
 		
 		// Set the associated physical property
 		dscomp.setAssociatedPhysicalProperty(ppic);
