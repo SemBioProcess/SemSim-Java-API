@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.zip.ZipFile;
 
 import javax.xml.stream.XMLStreamException;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.jdom.JDOMException;
 import org.semanticweb.owlapi.model.OWLException;
@@ -41,7 +44,7 @@ import semsim.reading.SemSimOWLreader;
 public class SemSimAPIexamples {
 
 	
-	public static void main(String[] args) throws IOException, InterruptedException, XMLStreamException, OWLException, JDOMException {
+	public static void main(String[] args) throws IOException, InterruptedException, XMLStreamException, OWLException, JDOMException, TransformerConfigurationException, TransformerException, TransformerFactoryConfigurationError {
 		
 		SemSimLibrary sslib = new SemSimLibrary();
 		
