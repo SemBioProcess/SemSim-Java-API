@@ -1,0 +1,9 @@
+[17:22:59,625  WARN RDFLanguages:80] - java-jsonld classes not on the classpath - JSON-LD input-output not available.
+[17:22:59,627  WARN RDFLanguages:80] - Minimum jarfiles are jsonld-java, jackson-core, jackson-annotations
+[17:22:59,628  WARN RDFLanguages:80] - If using a Jena distribution, put all jars in the lib/ directory on the classpath
+[15:54:03,029  WARN RDFLanguages:80] - java-jsonld classes not on the classpath - JSON-LD input-output not available.
+[15:54:03,032  WARN RDFLanguages:80] - Minimum jarfiles are jsonld-java, jackson-core, jackson-annotations
+[15:54:03,032  WARN RDFLanguages:80] - If using a Jena distribution, put all jars in the lib/ directory on the classpath
+[15:56:14,283  WARN RDFLanguages:80] - java-jsonld classes not on the classpath - JSON-LD input-output not available.
+[15:56:14,285  WARN RDFLanguages:80] - Minimum jarfiles are jsonld-java, jackson-core, jackson-annotations
+[15:56:14,285  WARN RDFLanguages:80] - If using a Jena distribution, put all jars in the lib/ directory on the classpath

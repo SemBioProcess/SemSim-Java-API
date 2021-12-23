@@ -1,0 +1,17 @@
+semsim
+semsim.annotation
+semsim.definitions
+semsim.extraction
+semsim.fileaccessors
+semsim.model
+semsim.model.collection
+semsim.model.computational
+semsim.model.computational.datastructures
+semsim.model.computational.units
+semsim.model.physical
+semsim.model.physical.object
+semsim.owl
+semsim.reading
+semsim.utilities
+semsim.utilities.webservices
+semsim.writing
