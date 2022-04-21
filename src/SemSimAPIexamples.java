@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.zip.ZipFile;
 
 import javax.xml.stream.XMLStreamException;
@@ -16,6 +17,7 @@ import org.semanticweb.owlapi.model.OWLException;
 import semsim.SemSimLibrary;
 import semsim.annotation.ReferenceOntologyAnnotation;
 import semsim.annotation.ReferenceTerm;
+import semsim.definitions.ReferenceOntologies.ReferenceOntology;
 import semsim.definitions.SemSimRelations.SemSimRelation;
 import semsim.definitions.SemSimRelations.StructuralRelation;
 import semsim.definitions.SemSimTypes;
@@ -31,6 +33,8 @@ import semsim.model.physical.object.PhysicalPropertyInComposite;
 import semsim.model.physical.object.ReferencePhysicalEntity;
 import semsim.reading.CellMLreader;
 import semsim.reading.ModelClassifier.ModelType;
+import semsim.utilities.webservices.BioPortalSearcher;
+import semsim.utilities.webservices.UniProtSearcher;
 import semsim.reading.OMEXmanifestReader;
 import semsim.reading.SBMLreader;
 import semsim.reading.SemSimOWLreader;
@@ -48,13 +52,15 @@ public class SemSimAPIexamples {
 		
 		SemSimLibrary sslib = new SemSimLibrary();
 		
+		//************************************************//
+		// READING MODELS AND EXAMINING THEIR CONTENTS //
+		//************************************************//
+		
 		// Read in an SBML model
 		File modelfile = new File("./test/BIOMD0000000355.xml");
 		ModelAccessor ma = FileAccessorFactory.getModelAccessor(modelfile);
 		SemSimModel semsimmodel = new SBMLreader(ma).read();
 		System.out.println("Loaded " + semsimmodel.getName());
-		
-		
 		
 		// Read in a SemSim model
 		modelfile = new File("./test/BIOMD0000000176.owl");
@@ -63,6 +69,7 @@ public class SemSimAPIexamples {
 		System.out.println("Loaded " + semsimmodel.getName());
 		
 		System.out.println("\n\nHere are the model's processes and the entities that participate in them:");
+		
 		// Write out all physical processes in the model, their participants, and the participants' stoichiometries
 		// Note that ReferencePhysicalProcesses are only included in a model to annotate CustomPhysicalProcesses (isVersionOf, etc.)
 		// so we just want to list the CustomPhysicalProcesses here
@@ -79,8 +86,6 @@ public class SemSimAPIexamples {
 				System.out.println(" Mediator: " + med.getName());
 			
 		}
-		
-		
 		
 		// Load an annotated CellML model within an OMEX archive
 		File omexfile = new File("./test/smith_chase_nokes_shaw_wake_2004.omex");
@@ -136,6 +141,10 @@ public class SemSimAPIexamples {
 		}
 		
 			
+		//*******************************//
+		// ADDING ANNOTATIONS TO A MODEL //
+		//*******************************//
+
 		// Add a singular (non-composite) annotation to a data structure that provides its complete physical definition
 		DataStructure ds = semsimmodel.getAssociatedDataStructure("environment.time");
 		URI uri = URI.create("https://identifiers.org/opb/OPB_01023");
@@ -173,6 +182,10 @@ public class SemSimAPIexamples {
 		System.out.println("  " + dscomp.getCompositeAnnotationAsString(true)); // Boolean argument indicates whether to append the codeword name in parentheses to the string
 		
 		
+		//********************//
+		// WRITING OUT MODELS //
+		//********************//
+		
 		// Write out a model as a SemSim OWL file
 		File modeloutfile = new File("./test/output/semsimowltest.owl");
 		ModelAccessor outacc = FileAccessorFactory.getModelAccessor(modeloutfile, ModelType.SEMSIM_MODEL);
@@ -188,5 +201,42 @@ public class SemSimAPIexamples {
 		modeloutfile = new File("model/cellmltest.cellml"); // Use a path that is relative to the location of the OMEX file 
 		ModelAccessor omexoutma = FileAccessorFactory.getOMEXArchive(omexoutfile, modeloutfile, ModelType.CELLML_MODEL);
 		omexoutma.writetoFile(semsimmodel);
+		
+		System.out.println("\n");
+
+		
+		//*******************************************************//
+		// SEARCH & RETRIEVAL OF KNOWLEDGE RESOURCE TERMS ONLINE //
+		//*******************************************************//
+		
+		// Search ChEBI on BioPortal for "caffeine"
+		BioPortalSearcher bps = new BioPortalSearcher();
+		String searchString = "caffeine";
+		HashMap<String,String> nameAndURImap = bps.search(
+				new SemSimLibrary(), 
+				searchString, 
+				ReferenceOntology.CHEBI.getNickName(), 
+				0); // Set last argument to 1 to only retrieve exact matches for string
+		
+		// Output the results. Show the term name and URI.
+		System.out.println("\nResults for BioPortal search on " + searchString + "...");
+
+		for(String name : nameAndURImap.keySet())
+			System.out.println("Search result: " + name + " (" + nameAndURImap.get(name) + ")");
+		
+		
+		// Search UniProt for "nup155"
+		System.out.println("\n");
+
+		UniProtSearcher ups = new UniProtSearcher();
+		searchString = "nup155";
+		nameAndURImap = ups.search(searchString);
+		
+		// Output the results
+		System.out.println("\nResults for UniProt search on " + searchString + "...");
+
+		for(String name : nameAndURImap.keySet())
+			System.out.println("Search result: " + name + " (" + nameAndURImap.get(name) + ")");
+
 	}
 }
